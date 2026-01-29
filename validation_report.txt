@@ -1,43 +1,43 @@
 ================================================================================
 BOND DATA VALIDATION REPORT
 ================================================================================
-Generated: 2026-01-29 11:14:05
+Generated: 2026-01-29 11:57:06
 
 CSV total rows: 2088
-Excel data rows: 2079
+Excel data rows: 1825
 Excel columns: 20
 
 ------------------------------------------------------------
 1. CUSIP VALIDATION
 ------------------------------------------------------------
-Total CUSIPs: 2079
+Total CUSIPs: 1825
 CUSIP length distribution:
-  7 chars: 6 (0.3%)
-  8 chars: 217 (10.4%)
-  9 chars: 1561 (75.1%) <-- standard
-  10 chars: 289 (13.9%)
-  11 chars: 4 (0.2%) <-- NONSTANDARD
-  12 chars: 2 (0.1%) <-- NONSTANDARD
+  7 chars: 3 (0.2%)
+  8 chars: 277 (15.2%)
+  9 chars: 1336 (73.2%) <-- standard
+  10 chars: 207 (11.3%)
+  11 chars: 1 (0.1%) <-- NONSTANDARD
+  12 chars: 1 (0.1%) <-- NONSTANDARD
 
-Standard 9-char CUSIPs: 1561 (75.1%)
-Non-9-char CUSIPs: 518
+Standard 9-char CUSIPs: 1336 (73.2%)
+Non-9-char CUSIPs: 489
 Sample non-9-char CUSIPs (first 10):
-  Row 46: '044908L030' (len=10)
-  Row 47: '044908L048' (len=10)
-  Row 48: '044908L055' (len=10)
-  Row 49: '044908L063' (len=10)
-  Row 50: '044908L071' (len=10)
-  Row 51: '044908L089' (len=10)
-  Row 52: '044908L121' (len=10)
-  Row 53: '044908L139' (len=10)
-  Row 54: '044908L139' (len=10)
-  Row 55: '044908LV54' (len=10)
+  Row 4: '427710AT98' (len=10)
+  Row 22: '863389MS' (len=8)
+  Row 36: '522179M9' (len=8)
+  Row 42: '522179L6' (len=8)
+  Row 44: '522179L6' (len=8)
+  Row 45: '044908L048' (len=10)
+  Row 47: '044908L055' (len=10)
+  Row 48: '09804626M9' (len=10)
+  Row 49: '044908L139' (len=10)
+  Row 50: '044908L063' (len=10)
 
 ------------------------------------------------------------
 2. DUPLICATE CHECK
 ------------------------------------------------------------
-Unique CUSIPs: 1922
-Duplicate CUSIPs: 104
+Unique CUSIPs: 1706
+Duplicate CUSIPs: 75
 Note: Some duplicates are expected (same CUSIP, different maturities/yields)
 Top 10 most duplicated:
   'A7919PJ44': 21 occurrences
@@ -45,73 +45,67 @@ Top 10 most duplicated:
   '796664020': 7 occurrences
   '047604DA1': 5 occurrences
   '57529ZNM8': 5 occurrences
-  '068424046S': 5 occurrences
-  '729888404': 4 occurrences
   '611355MD7': 4 occurrences
-  '068424046U': 4 occurrences
-  '57529ZNC2': 3 occurrences
+  '578888006A': 3 occurrences
+  '125550ME70': 3 occurrences
+  '08558HH02': 2 occurrences
+  '522179L6': 2 occurrences
 
 ------------------------------------------------------------
 3. DATE FORMAT VALIDATION
 ------------------------------------------------------------
 Issue Date:
-  Valid dates: 1976
-  Null/empty: 41
-  String (unconverted): 62
-    Row 453: '000'
-    Row 454: '000'
-    Row 455: '000'
-    Row 456: '857'
-    Row 457: '334'
-Maturity:
-  Valid dates: 2022
-  Null/empty: 0
+  Valid dates: 1624
+  Null/empty: 144
   String (unconverted): 57
-    Row 1031: 'AMT/ST TAX-EXMPT'
-    Row 1032: 'AMT/ST TAX-EXMPT'
-    Row 1090: 'FD BYST TAX EXMPT'
-    Row 1091: 'FD BYST TAX EXMPT'
-    Row 1092: 'FD BYST TAX EXMPT'
+    Row 304: '000'
+    Row 320: '236'
+    Row 340: '40MP'
+    Row 367: '126'
+    Row 368: '880'
+Maturity:
+  Valid dates: 1680
+  Null/empty: 106
+  String (unconverted): 39
+    Row 435: 'FED TAX-EXEMPT'
+    Row 453: 'AMT/ST TAX-EXEMPT'
+    Row 1070: 'FD BYST TAX EXMPT'
+    Row 1071: 'FD BYST TAX EXMPT'
+    Row 1072: 'FD BYST TAX EXMPT'
 
 ------------------------------------------------------------
 4. YES/NO FIELD ALIGNMENT CHECK
 ------------------------------------------------------------
 Col 11 (Self-reported Green):
-  Yes: 1147 (55.2%)
-  No: 877 (42.2%)
-  Empty/null: 55 (2.6%)
+  Yes: 861 (47.2%)
+  No: 810 (44.4%)
+  Empty/null: 154 (8.4%)
 Col 12 (Mgmt of Proc):
-  Yes: 578 (27.8%)
-  No: 1008 (48.5%)
-  Empty/null: 493 (23.7%)
+  Yes: 536 (29.4%)
+  No: 720 (39.5%)
+  Empty/null: 569 (31.2%)
 Col 13 (ESG Reporting):
-  Yes: 591 (28.4%)
-  No: 980 (47.1%)
-  Empty/null: 508 (24.4%)
+  Yes: 543 (29.8%)
+  No: 699 (38.3%)
+  Empty/null: 583 (31.9%)
 Col 14 (ESG Assurance Providers):
-  Yes: 349 (16.8%)
-  No: 1217 (58.5%)
-  Empty/null: 513 (24.7%)
+  Yes: 334 (18.3%)
+  No: 905 (49.6%)
+  Empty/null: 586 (32.1%)
 Col 15 (Proj Sel Proc):
-  Yes: 533 (25.6%)
-  No: 1017 (48.9%)
-  Empty/null: 529 (25.4%)
+  Yes: 503 (27.6%)
+  No: 726 (39.8%)
+  Empty/null: 596 (32.7%)
 Col 16 (ESG Framework):
-  Yes: 339 (16.3%)
-  No: 955 (45.9%)
-  Empty/null: 785 (37.8%)
+  Yes: 308 (16.9%)
+  No: 691 (37.9%)
+  Empty/null: 826 (45.3%)
 
 ------------------------------------------------------------
 5. COLUMN DATA TYPE CHECK
 ------------------------------------------------------------
-Yield (col 4): numeric=1817, null=250, string=12
-Amt Issued (col 5): numeric=2068, null=1, string=10
-  String examples:
-    Row 1722: '11/19/30'
-    Row 1869: '0.3.000'
-    Row 1871: '3.30.000'
-    Row 1881: '1.240E'
-    Row 1882: '1.300E'
+Yield (col 4): numeric=1459, null=354, string=12
+Amt Issued (col 5): numeric=1824, null=1, string=0
 
 ------------------------------------------------------------
 6. SCREENSHOT CROSS-VALIDATION
@@ -123,24 +117,24 @@ Page 001 (first page) - Bloomberg terminal screenshot:
   States: CA, NY, AR, CO, MA, GA
 
   Cross-check results:
-  [OK] 'California Infra' found: Row 153, CUSIP=9994472J3, State=CA
-  [OK] 'New York Transpo' found: Row 1450, CUSIP=65011E1P9, State=NY
-  [OK] 'San Joaquin' found: Row 225, CUSIP=P9785J1A85, State=CA
-  [OK] 'Berkeley' found: Row 284, CUSIP=058040P47, State=CA
+  [OK] 'California Infra' found: Row 151, CUSIP=13034AT79, State=CA
+  [OK] 'New York Transpo' found: Row 1454, CUSIP=650116B30, State=NY
+  [OK] 'San Joaquin' found: Row 222, CUSIP=796582AA6, State=CA
+  [OK] 'Berkeley' found: Row 1791, CUSIP=08424MF99, State=NV
   [MISS] 'Shelburn' NOT found in Excel
-  [OK] 'Metropolitan Atla' found: Row 608, CUSIP=606240QW0, State=GA
-  [OK] 'Massachusetts' found: Row 943, CUSIP=57529ZNU5, State=MA
+  [OK] 'Metropolitan Atla' found: Row 600, CUSIP=597746BW5, State=GA
+  [OK] 'Massachusetts' found: Row 925, CUSIP=015829YK8, State=IH
 
 Page 035 (middle) - Bloomberg terminal screenshot:
   Visible issuers: Deutsche Bank, District of Columbia, East Bay Municipal,
   East Rockaway, Eco Maine
 
   Cross-check results:
-  [OK] 'Deutsche Bank' found: Row 176, CUSIP=F252558M0, State=CA
-  [OK] 'District of Colum' found: Row 568, CUSIP=29584SVG1, State=DC
-  [OK] 'East Bay Munic' found: Row 179, CUSIP=271012HU2, State=CA
-  [OK] 'East Rockaway' found: Row 1398, CUSIP=737437F80, State=NY
-  [OK] 'Eco Maine' found: Row 1031, CUSIP=729888404, State=IN
+  [OK] 'Deutsche Bank' found: Row 174, CUSIP=25556JN2, State=CA
+  [OK] 'District of Colum' found: Row 560, CUSIP=29584SVG4, State=DC
+  [OK] 'East Bay Munic' found: Row 177, CUSIP=271012HU2, State=CA
+  [OK] 'East Rockaway' found: Row 1403, CUSIP=124767X7, State=NY
+  [OK] 'Eco Maine' found: Row 984, CUSIP=27988AAB2, State=NE
 
 Page 070 (last page) - Bloomberg terminal screenshot:
   Visible issuers: City of Arvada, California Infrastructure, Hartford County,
@@ -148,84 +142,111 @@ Page 070 (last page) - Bloomberg terminal screenshot:
   Stockton-East, Tender Option, Western Placer
 
   Cross-check results:
-  [OK] 'City of Arvada' found: Row 472, CUSIP=042523GZ0, State=CO
-  [OK] 'Hartford County' found: Row 546, CUSIP=41649986F2, State=CT
-  [OK] 'Indiana Finance' found: Row 846, CUSIP=45534ZPN0, State=IN
-  [OK] 'Montgomery Coun' found: Row 890, CUSIP=61323BN67, State=NY
-  [OK] 'San Francisco Ba' found: Row 206, CUSIP=797961JJ36, State=CA
-  [OK] 'Stockton-East' found: Row 314, CUSIP=08143H666, State=CA
-  [OK] 'Tender Option' found: Row 77, CUSIP=880534D92, State=CA
-  [OK] 'Western Placer' found: Row 152, CUSIP=992216GTS, State=CA
+  [OK] 'City of Arvada' found: Row 465, CUSIP=04325ZBB0, State=CO
+  [OK] 'Hartford County' found: Row 528, CUSIP=41649986G3, State=CT
+  [OK] 'Indiana Finance' found: Row 830, CUSIP=455044PA5, State=IN
+  [OK] 'Montgomery Coun' found: Row 873, CUSIP=61323AAS4, State=KY
+  [OK] 'San Francisco Ba' found: Row 153, CUSIP=P9766PAS2, State=CA
+  [OK] 'Stockton-East' found: Row 65, CUSIP=864431DPK, State=CA
+  [OK] 'Tender Option' found: Row 76, CUSIP=880359T09, State=GA
+  [OK] 'Western Placer' found: Row 147, CUSIP=95921SG25, State=CA
 
 ------------------------------------------------------------
 7. DATA COMPLETENESS
 ------------------------------------------------------------
-  Col  1 (CUSIP                    ):  2079/2079 (100.0%)
-  Col  2 (State Code               ):  2047/2079 (98.5%)
-  Col  3 (Issuer Name              ):  2077/2079 (99.9%)
-  Col  4 (Yield at Issue           ):  1829/2079 (88.0%)
-  Col  5 (Amt Issued               ):  2078/2079 (100.0%)
-  Col  6 (Issue Date               ):  2038/2079 (98.0%)
-  Col  7 (Maturity                 ):  2079/2079 (100.0%)
-  Col  8 (Tax Prov                 ):  2037/2079 (98.0%)
-  Col  9 (Fin Typ                  ):  1931/2079 (92.9%)
-  Col 10 (BICS Level 2             ):  2079/2079 (100.0%)
-  Col 11 (Self-reported Green      ):  2024/2079 (97.4%)
-  Col 12 (Mgmt of Proc             ):  1586/2079 (76.3%)
-  Col 13 (ESG Reporting            ):  1571/2079 (75.6%)
-  Col 14 (ESG Assurance Providers  ):  1566/2079 (75.3%)
-  Col 15 (Proj Sel Proc            ):  1550/2079 (74.6%)
-  Col 16 (ESG Framework            ):  1294/2079 (62.2%)
-  Col 17 (Industry                 ):  2076/2079 (99.9%)
-  Col 18 (Issuer Type              ):     0/2079 (0.0%)
-  Col 19 (ESG Project Categories   ):  1605/2079 (77.2%)
-  Col 20 (Project Subcategory      ):  1258/2079 (60.5%)
+  Col  1 (CUSIP                    ):  1825/1825 (100.0%)
+  Col  2 (State Code               ):  1706/1825 (93.5%)
+  Col  3 (Issuer Name              ):  1825/1825 (100.0%)
+  Col  4 (Yield at Issue           ):  1471/1825 (80.6%)
+  Col  5 (Amt Issued               ):  1824/1825 (99.9%)
+  Col  6 (Issue Date               ):  1681/1825 (92.1%)
+  Col  7 (Maturity                 ):  1719/1825 (94.2%)
+  Col  8 (Tax Prov                 ):  1689/1825 (92.5%)
+  Col  9 (Fin Typ                  ):  1586/1825 (86.9%)
+  Col 10 (BICS Level 2             ):  1710/1825 (93.7%)
+  Col 11 (Self-reported Green      ):  1671/1825 (91.6%)
+  Col 12 (Mgmt of Proc             ):  1256/1825 (68.8%)
+  Col 13 (ESG Reporting            ):  1242/1825 (68.1%)
+  Col 14 (ESG Assurance Providers  ):  1239/1825 (67.9%)
+  Col 15 (Proj Sel Proc            ):  1229/1825 (67.3%)
+  Col 16 (ESG Framework            ):   999/1825 (54.7%)
+  Col 17 (Industry                 ):  1716/1825 (94.0%)
+  Col 18 (Issuer Type              ):     0/1825 (0.0%)
+  Col 19 (ESG Project Categories   ):  1261/1825 (69.1%)
+  Col 20 (Project Subcategory      ):   942/1825 (51.6%)
 
 ------------------------------------------------------------
 8. STATE CODE DISTRIBUTION (top 15)
 ------------------------------------------------------------
-  CA    :   423
-  NY    :   298
-  NJ    :   232
-  NV    :   152
-  IL    :    89
-  IA    :    86
-  WI    :    81
-  IN    :    75
-  AR    :    64
-  CO    :    64
+  CA    :   392
+  NY    :   247
+  NJ    :   222
+  EMPTY :   119
+  IA    :    81
+  IL    :    72
+  IN    :    72
+  AR    :    61
   GA    :    51
-  KY    :    51
-  WV    :    46
-  TX    :    39
+  KY    :    49
+  WI    :    49
+  CO    :    43
+  TX    :    38
+  NV    :    36
   OK    :    33
-  Total unique states: 36
+  Total unique states: 35
 
 ------------------------------------------------------------
-9. KNOWN DATA QUALITY ISSUES FROM EXTRACTION
+9. MATCHED VS UNMATCHED ROWS (V2 DEDUPLICATION)
 ------------------------------------------------------------
 
-Truncated values (ending with '..'): 1045
-Rows with < 6 Yes/No values: 810
+Rows matched from CSV (full data): 1719
+Rows unmatched (BB_ID + Issuer + Amt only): 106
+Match rate: 94.2%
+
+------------------------------------------------------------
+10. ORIGINAL EXCEL GROUND TRUTH COMPARISON
+------------------------------------------------------------
+
+Original Excel rows: 1825
+Final Excel rows: 1825
+Row count match: YES
+
+Issuer Name exact match: 1825/1825
+Issuer Name mismatches: 0
+
+Amt Issued exact match: 1824/1825
+Amt Issued both null: 1
+Amt Issued mismatches: 0
+
+------------------------------------------------------------
+11. KNOWN DATA QUALITY ISSUES FROM EXTRACTION
+------------------------------------------------------------
+
+Truncated values (ending with '..'): 302
+Rows with < 6 Yes/No values: 850
 CSV rows with >= 16 fields: 2080
-Excel data rows: 2079
-Rows not imported: 1 (extraction artifacts)
+Excel data rows: 1825
+CSV rows deduplicated/skipped: 361
 Non-data text rows in CSV: 8
 
 ------------------------------------------------------------
-10. SUMMARY
+12. SUMMARY
 ------------------------------------------------------------
-  Total Excel rows: 2079
-  Standard CUSIPs (9 chars): 1561 (75.1%)
-  Dates properly formatted: Issue=1976, Maturity=2022
-  Amounts as numbers: 2068
-  Yields as numbers: 1817
-  All page 1/35/70 issuers found in Excel: YES
+  Total Excel rows: 1825 (target: 1825)
+  Row count matches original: YES
+  Rows with full CSV data: 1719
+  Rows with BB_ID only: 106
+  Standard CUSIPs (9 chars): 1336 (73.2%)
+  Dates properly formatted: Issue=1624, Maturity=1680
+  Amounts as numbers: 1824
+  Yields as numbers: 1459
   Issuer Type column: Left empty (as requested)
-  Truncated extraction values: 1045
-  Incomplete Yes/No rows: 810 (extraction gaps)
+  Truncated extraction values: 302
+  Incomplete Yes/No rows: 850 (includes 106 unmatched)
 
-OVERALL: Data successfully populated with best-effort handling of
-extraction artifacts. Non-standard CUSIPs and truncated values reflect
-limitations of screenshot-based data extraction from Bloomberg terminal.
+OVERALL: Data successfully populated with exactly 1825 rows matching the
+original Excel. Issuer Names and Amt Issued taken from original Excel (ground
+truth). All other columns populated from CSV via OCR-aware fuzzy matching.
+Match rate: 94.2% of rows have full CSV data.
+Unmatched rows retain Bloomberg ID as CUSIP with Issuer and Amount only.
 ================================================================================
