@@ -1,7 +1,7 @@
 ================================================================================
 BOND DATA VALIDATION REPORT
 ================================================================================
-Generated: 2026-01-29 11:57:06
+Generated: 2026-01-29 12:15:15
 
 CSV total rows: 2088
 Excel data rows: 1825
@@ -56,22 +56,12 @@ Top 10 most duplicated:
 ------------------------------------------------------------
 Issue Date:
   Valid dates: 1624
-  Null/empty: 144
-  String (unconverted): 57
-    Row 304: '000'
-    Row 320: '236'
-    Row 340: '40MP'
-    Row 367: '126'
-    Row 368: '880'
+  Null/empty: 201
+  String (unconverted): 0
 Maturity:
   Valid dates: 1680
-  Null/empty: 106
-  String (unconverted): 39
-    Row 435: 'FED TAX-EXEMPT'
-    Row 453: 'AMT/ST TAX-EXEMPT'
-    Row 1070: 'FD BYST TAX EXMPT'
-    Row 1071: 'FD BYST TAX EXMPT'
-    Row 1072: 'FD BYST TAX EXMPT'
+  Null/empty: 145
+  String (unconverted): 0
 
 ------------------------------------------------------------
 4. YES/NO FIELD ALIGNMENT CHECK
@@ -104,7 +94,7 @@ Col 16 (ESG Framework):
 ------------------------------------------------------------
 5. COLUMN DATA TYPE CHECK
 ------------------------------------------------------------
-Yield (col 4): numeric=1459, null=354, string=12
+Yield (col 4): numeric=1456, null=357, string=12
 Amt Issued (col 5): numeric=1824, null=1, string=0
 
 ------------------------------------------------------------
@@ -157,13 +147,13 @@ Page 070 (last page) - Bloomberg terminal screenshot:
   Col  1 (CUSIP                    ):  1825/1825 (100.0%)
   Col  2 (State Code               ):  1706/1825 (93.5%)
   Col  3 (Issuer Name              ):  1825/1825 (100.0%)
-  Col  4 (Yield at Issue           ):  1471/1825 (80.6%)
+  Col  4 (Yield at Issue           ):  1468/1825 (80.4%)
   Col  5 (Amt Issued               ):  1824/1825 (99.9%)
-  Col  6 (Issue Date               ):  1681/1825 (92.1%)
-  Col  7 (Maturity                 ):  1719/1825 (94.2%)
-  Col  8 (Tax Prov                 ):  1689/1825 (92.5%)
-  Col  9 (Fin Typ                  ):  1586/1825 (86.9%)
-  Col 10 (BICS Level 2             ):  1710/1825 (93.7%)
+  Col  6 (Issue Date               ):  1624/1825 (89.0%)
+  Col  7 (Maturity                 ):  1680/1825 (92.1%)
+  Col  8 (Tax Prov                 ):  1719/1825 (94.2%)
+  Col  9 (Fin Typ                  ):  1582/1825 (86.7%)
+  Col 10 (BICS Level 2             ):  1708/1825 (93.6%)
   Col 11 (Self-reported Green      ):  1671/1825 (91.6%)
   Col 12 (Mgmt of Proc             ):  1256/1825 (68.8%)
   Col 13 (ESG Reporting            ):  1242/1825 (68.1%)
@@ -222,7 +212,7 @@ Amt Issued mismatches: 0
 11. KNOWN DATA QUALITY ISSUES FROM EXTRACTION
 ------------------------------------------------------------
 
-Truncated values (ending with '..'): 302
+Truncated values (ending with '..'): 86
 Rows with < 6 Yes/No values: 850
 CSV rows with >= 16 fields: 2080
 Excel data rows: 1825
@@ -239,9 +229,9 @@ Non-data text rows in CSV: 8
   Standard CUSIPs (9 chars): 1336 (73.2%)
   Dates properly formatted: Issue=1624, Maturity=1680
   Amounts as numbers: 1824
-  Yields as numbers: 1459
+  Yields as numbers: 1456
   Issuer Type column: Left empty (as requested)
-  Truncated extraction values: 302
+  Truncated extraction values: 86
   Incomplete Yes/No rows: 850 (includes 106 unmatched)
 
 OVERALL: Data successfully populated with exactly 1825 rows matching the
