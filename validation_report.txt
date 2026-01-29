@@ -1,7 +1,7 @@
 ================================================================================
 BOND DATA VALIDATION REPORT
 ================================================================================
-Generated: 2026-01-29 12:15:15
+Generated: 2026-01-29 16:18:31
 
 CSV total rows: 2088
 Excel data rows: 1825
@@ -151,7 +151,7 @@ Page 070 (last page) - Bloomberg terminal screenshot:
   Col  5 (Amt Issued               ):  1824/1825 (99.9%)
   Col  6 (Issue Date               ):  1624/1825 (89.0%)
   Col  7 (Maturity                 ):  1680/1825 (92.1%)
-  Col  8 (Tax Prov                 ):  1719/1825 (94.2%)
+  Col  8 (Tax Prov                 ):  1717/1825 (94.1%)
   Col  9 (Fin Typ                  ):  1582/1825 (86.7%)
   Col 10 (BICS Level 2             ):  1708/1825 (93.6%)
   Col 11 (Self-reported Green      ):  1671/1825 (91.6%)
@@ -212,7 +212,7 @@ Amt Issued mismatches: 0
 11. KNOWN DATA QUALITY ISSUES FROM EXTRACTION
 ------------------------------------------------------------
 
-Truncated values (ending with '..'): 86
+Truncated values (ending with '..'): 62
 Rows with < 6 Yes/No values: 850
 CSV rows with >= 16 fields: 2080
 Excel data rows: 1825
@@ -231,7 +231,7 @@ Non-data text rows in CSV: 8
   Amounts as numbers: 1824
   Yields as numbers: 1456
   Issuer Type column: Left empty (as requested)
-  Truncated extraction values: 86
+  Truncated extraction values: 62
   Incomplete Yes/No rows: 850 (includes 106 unmatched)
 
 OVERALL: Data successfully populated with exactly 1825 rows matching the
