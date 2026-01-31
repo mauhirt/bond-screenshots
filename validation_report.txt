@@ -1,7 +1,7 @@
 ================================================================================
 BOND DATA VALIDATION REPORT
 ================================================================================
-Generated: 2026-01-29 16:18:31
+Generated: 2026-01-31 15:23:42
 
 CSV total rows: 2088
 Excel data rows: 1825
@@ -160,7 +160,7 @@ Page 070 (last page) - Bloomberg terminal screenshot:
   Col 14 (ESG Assurance Providers  ):  1239/1825 (67.9%)
   Col 15 (Proj Sel Proc            ):  1229/1825 (67.3%)
   Col 16 (ESG Framework            ):   999/1825 (54.7%)
-  Col 17 (Industry                 ):  1716/1825 (94.0%)
+  Col 17 (Industry                 ):  1676/1825 (91.8%)
   Col 18 (Issuer Type              ):     0/1825 (0.0%)
   Col 19 (ESG Project Categories   ):  1261/1825 (69.1%)
   Col 20 (Project Subcategory      ):   942/1825 (51.6%)
@@ -212,7 +212,7 @@ Amt Issued mismatches: 0
 11. KNOWN DATA QUALITY ISSUES FROM EXTRACTION
 ------------------------------------------------------------
 
-Truncated values (ending with '..'): 62
+Truncated values (ending with '..'): 33
 Rows with < 6 Yes/No values: 850
 CSV rows with >= 16 fields: 2080
 Excel data rows: 1825
@@ -231,7 +231,7 @@ Non-data text rows in CSV: 8
   Amounts as numbers: 1824
   Yields as numbers: 1456
   Issuer Type column: Left empty (as requested)
-  Truncated extraction values: 62
+  Truncated extraction values: 33
   Incomplete Yes/No rows: 850 (includes 106 unmatched)
 
 OVERALL: Data successfully populated with exactly 1825 rows matching the
