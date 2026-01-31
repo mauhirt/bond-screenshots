@@ -1,2 +1,5 @@
 # NBI data files (too large for git)
 nbi_data/
+
+# CWNS data files
+cwns_data/
