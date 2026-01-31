@@ -3,3 +3,6 @@ nbi_data/
 
 # CWNS data files
 cwns_data/
+
+# Geodata files (shapefiles, geopackages - too large for git)
+geodata/
