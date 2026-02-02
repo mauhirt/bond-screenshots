@@ -215,6 +215,86 @@ Variable & Description \\
 \noindent SRF data are sparse by construction: most CWSRF lending targets smaller communities, so only 178 cities (31\% of the sample) have any strict-match SRF activity, and the matched share of total national CWSRF dollars is 24.2\%. SRF variables are missing (not zero) for city-years with no matched agreements.
 
 %----------------------------------------------------------------------
+\section{State SRF Commitment Index}
+%----------------------------------------------------------------------
+
+To measure state-level commitment to clean water infrastructure investment, we construct a composite index from the CWSRF data combined with state population and GDP series. State population (in thousands) is drawn from the FRED \texttt{\{ST\}POP} series and state nominal GDP (in millions) from the FRED \texttt{\{ST\}NGSP} series, both sourced from the Bureau of Economic Analysis via the Federal Reserve Bank of St.\ Louis.
+
+\subsection{Time-Varying Measures}
+
+For each state-year, we compute:
+\begin{align}
+\texttt{state\_srf\_per\_capita}_{s,t} &= \frac{\text{SRF total amount}_{s,t}}{\text{population}_{s,t}} \\
+\texttt{state\_srf\_per\_gdp}_{s,t} &= \frac{\text{SRF total amount}_{s,t}}{\text{GDP}_{s,t}} \\
+\texttt{state\_srf\_cumulative}_{s,t} &= \sum_{\tau=2001}^{t} \text{SRF total amount}_{s,\tau}
+\end{align}
+where $s$ indexes states and $t$ indexes years (2001--2025). These capture annual SRF lending intensity relative to state size.
+
+\subsection{Composite Index}
+
+We also construct a time-invariant composite index summarizing each state's long-run SRF commitment:
+\begin{equation}
+\texttt{state\_srf\_commitment}_s = \frac{1}{2}\Bigl(\text{percentile rank}\bigl(\overline{\text{SRF/capita}}_s\bigr) + \text{percentile rank}\bigl(\overline{\text{SRF/GDP}}_s\bigr)\Bigr)
+\end{equation}
+where $\overline{\text{SRF/capita}}_s$ is the ratio of cumulative SRF lending (2001--2024) to average state population, and $\overline{\text{SRF/GDP}}_s$ is the analogous ratio using average state GDP. The index ranges from 0 to 1, with higher values indicating greater state commitment to CWSRF lending. South Dakota (1.000), Iowa (0.970), and North Dakota (0.970) rank highest; Utah (0.020), Kentucky (0.050), and Arizona (0.080) rank lowest.
+
+%----------------------------------------------------------------------
+\section{EPA Regulatory and Compliance Variables}
+%----------------------------------------------------------------------
+
+We incorporate two additional datasets from the EPA's Enforcement and Compliance History Online (ECHO) system.
+
+\subsection{State Environmental Stringency (Time-Varying)}
+
+The state stringency panel (\texttt{state\_stringency\_2010\_2025.csv}) contains 48 variables for 52 states/territories observed annually from 2010 to 2025. These measure state-level environmental enforcement intensity across four regulatory programs:
+
+\begin{itemize}[nosep]
+\item \textbf{NPDES (Clean Water Act)}: Inspection counts (EPA vs.\ state), violation counts, formal and informal enforcement actions, penalty amounts, facility counts, and derived rates (inspection rate, response rate, detection rate, average penalties)
+\item \textbf{RCRA (Hazardous Waste)}: Violation and enforcement counts
+\item \textbf{Clean Air Act}: Violation counts, enforcement actions, and penalty amounts
+\item \textbf{SDWA (Safe Drinking Water)}: Violation counts (health-based, total), enforcement actions (EPA vs.\ state)
+\end{itemize}
+
+\noindent A composite \texttt{state\_stringency\_index} is computed from three normalized components: the state NPDES inspection rate, the state NPDES response rate (enforcement actions per violation), and the average state NPDES penalty amount. Each component is normalized to $[0,1]$ within each year and averaged with equal weight. This index captures the intensity of state-level environmental enforcement, which varies independently of federal EPA enforcement. These variables are merged to the panel on state and year, providing coverage for 2010--2025 city-years (51.2\% of panel observations).
+
+\subsection{City-Level Regulatory Environment (Cross-Sectional)}
+
+The city regulatory variables file (\texttt{epa\_green\_bond\_variables.csv}) contains 156 variables for 577 cities, capturing the cumulative regulatory footprint of facilities within each city's boundaries. Variables are reported in three ownership categories:
+
+\begin{itemize}[nosep]
+\item \texttt{\_ALL}: All regulated facilities in the city
+\item \texttt{\_MUNI}: Municipal government-owned facilities only
+\item \texttt{\_LOCGOV}: Local government-owned facilities (includes municipal)
+\end{itemize}
+
+\noindent Key variable groups include:
+
+\begin{table}[htbp]
+\centering
+\caption{City-Level EPA Regulatory Variables (Selected)}
+\label{tab:epa_city_vars}
+\begin{tabular}{@{}lp{9cm}@{}}
+\toprule
+Prefix & Description \\
+\midrule
+\texttt{NPDES\_PERMIT\_*} & NPDES permit counts and major facility flags \\
+\texttt{NPDES\_QNCR\_*} & Quarterly non-compliance records and effluent violations \\
+\texttt{NPDES\_SE\_VIOL\_*} & Single-event violation counts \\
+\texttt{NPDES\_FORMAL\_*} & Formal enforcement actions and penalty amounts \\
+\texttt{NPDES\_INFORMAL\_*} & Informal enforcement actions \\
+\texttt{NPDES\_INSP\_*} & Inspection counts (EPA vs.\ state) \\
+\texttt{RCRA\_*} & RCRA facility counts, violations, and enforcement \\
+\texttt{AIR\_*} & Clean Air Act facilities, violations, and enforcement \\
+\texttt{SDWA\_*} & Drinking water system counts, population served, violations \\
+\texttt{CASE\_*} & EPA case/litigation counts and consent decrees \\
+\texttt{SEWER\_*} & Sewer overflow event counts, discharge volumes, and durations \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\noindent These variables are time-invariant (reflecting cumulative historical records) and are merged to the panel on city FIPS code. Coverage is 100\% for all 575 cities in the panel.
+
+%----------------------------------------------------------------------
 \section{Price Deflator}
 %----------------------------------------------------------------------
 
