@@ -253,6 +253,8 @@ def main():
         'mat_updated': 0, 'mat_swapped': 0, 'mat_kept': 0,
         'tax_updated': 0, 'bics_updated': 0, 'industry_updated': 0,
         'fin_typ_updated': 0, 'state_updated': 0,
+        'yesno_updated': 0, 'issuer_type_updated': 0,
+        'esg_cat_updated': 0, 'subcat_updated': 0,
     }
 
     date_format = 'MM/DD/YYYY'
@@ -366,6 +368,105 @@ def main():
                     claude_ws.cell(row=row, column=17).value = normalized
                     stats['industry_updated'] += 1
 
+        # ── Yes/No columns: Use Gemini where strictly "Yes" or "No" ──
+        # Gemini cols 10-15 map to Excel cols 11-16
+        # Gemini has column-shift contamination (industry codes, ESG cats in
+        # Yes/No fields), so only accept strict "Yes"/"No" values.
+        yesno_mapping = [
+            (10, 11),  # Self-reported Green
+            (11, 12),  # Mgmt of Proc
+            (12, 13),  # ESG Reporting
+            (13, 14),  # ESG Assurance Providers
+            (14, 15),  # Proj Sel Proc
+            (15, 16),  # ESG Framework
+        ]
+        for g_col, e_col in yesno_mapping:
+            gv = gemini_row[g_col].strip() if len(gemini_row) > g_col else ''
+            if gv in ('Yes', 'No'):
+                old_val = str(claude_ws.cell(row=row, column=e_col).value or '').strip()
+                if old_val != gv:
+                    claude_ws.cell(row=row, column=e_col).value = gv
+                    stats['yesno_updated'] += 1
+
+        # ── Issuer Type: Extract from Gemini issuer name prefix ──
+        # Gemini issuer format: "XX Entity of Name..." e.g., "AR City of Little Rock"
+        if len(g_issuer) >= 3 and g_issuer[2:3] == ' ':
+            rest = g_issuer[3:]
+            issuer_type = ''
+            if rest.startswith('City & County') or rest.startswith('City and County'):
+                issuer_type = 'County'
+            elif rest.startswith('City'):
+                issuer_type = 'City'
+            elif rest.startswith('County'):
+                issuer_type = 'County'
+            elif rest.startswith('State'):
+                issuer_type = 'State'
+            elif rest.startswith('Town'):
+                issuer_type = 'Town'
+            elif rest.startswith('Village'):
+                issuer_type = 'Village'
+            elif rest.startswith('District'):
+                issuer_type = 'District'
+            if issuer_type:
+                old_it = str(claude_ws.cell(row=row, column=18).value or '').strip()
+                if old_it != issuer_type:
+                    claude_ws.cell(row=row, column=18).value = issuer_type
+                    stats['issuer_type_updated'] += 1
+
+        # ── ESG Project Categories: Gemini col 17 (labeled Kestrel Score) ──
+        # Gemini's column 17 actually contains ESG Project Categories data.
+        # Needs cleanup: strip "CITY...", "STATE" prefixes, fix "|" → ", "
+        g_esg_raw = gemini_row[17].strip() if len(gemini_row) > 17 else ''
+        if g_esg_raw and g_esg_raw != '--':
+            # Clean up prefixes and separators
+            esg_clean = g_esg_raw
+            # Remove entity prefixes like "CITY... ", "STATE "
+            esg_clean = re.sub(r'^(CITY|STATE|COUNTY|TOWN)\S*\s+', '', esg_clean)
+            # Fix separator: "|" → ", "
+            esg_clean = esg_clean.replace('|', ', ')
+            # Fix truncation: "Ren..." → "Renewable Energy", etc.
+            esg_clean = re.sub(r'Ren\w*\.{2,}', 'Renewable Energy', esg_clean)
+            esg_clean = re.sub(r'Clean Trans\w*\.{2,}', 'Clean Transportation', esg_clean)
+            esg_clean = re.sub(r'Sust\w*\.{2,}', 'Sustainable Water', esg_clean)
+            esg_clean = re.sub(r'Pollu\w*\.{2,}', 'Pollution Control', esg_clean)
+            esg_clean = re.sub(r'Energ\w*Eff\w*\.{2,}', 'Energy Efficiency', esg_clean)
+            esg_clean = esg_clean.strip().rstrip('.')
+            # Only use if it contains valid ESG category keywords
+            valid_esg_kw = ['Sustainable Water', 'Energy Efficiency', 'Clean Transportation',
+                           'Renewable Energy', 'Pollution Control']
+            if any(kw in esg_clean for kw in valid_esg_kw):
+                old_esg = str(claude_ws.cell(row=row, column=19).value or '').strip()
+                if old_esg != esg_clean:
+                    claude_ws.cell(row=row, column=19).value = esg_clean
+                    stats['esg_cat_updated'] += 1
+
+        # ── Project Subcategory: Combine Gemini col 18 + col 19 ──
+        # Manual reconciliation shows subcategory = col18 + ", " + col19
+        g_sub1 = gemini_row[18].strip() if len(gemini_row) > 18 else ''
+        g_sub2 = gemini_row[19].strip() if len(gemini_row) > 19 else ''
+        # Filter out contaminated values (industry codes, ESG categories)
+        valid_subcats = ['Infrastructure', 'Energy Storage', 'Public', 'Solar',
+                        'Wind', 'Rail (Non Passenger)', 'Conservation',
+                        'LEED Certified', 'Greenhouse Gas Control',
+                        'Bioer', 'Waste Reduction']
+        sub_parts = []
+        for sv in [g_sub1, g_sub2]:
+            if sv and any(vc in sv for vc in valid_subcats):
+                # Also handle combined values with "|"
+                for piece in sv.replace('|', ', ').split(', '):
+                    piece = piece.strip().rstrip('.')
+                    # Fix truncation
+                    piece = re.sub(r'Infrastructur\b', 'Infrastructure', piece)
+                    if piece and any(vc in piece for vc in valid_subcats):
+                        if piece not in sub_parts:
+                            sub_parts.append(piece)
+        if sub_parts:
+            subcat_val = ', '.join(sub_parts)
+            old_sub = str(claude_ws.cell(row=row, column=20).value or '').strip()
+            if old_sub != subcat_val:
+                claude_ws.cell(row=row, column=20).value = subcat_val
+                stats['subcat_updated'] += 1
+
     # ── Post-processing: Force all issue dates to year 2025 ──
     # All issuance in this dataset was for 2025. Claude's OCR often got the
     # year wrong (2020, 2006, etc.). For unmatched CUSIPs (no Gemini data)
@@ -396,6 +497,10 @@ def main():
     print(f"Fin Typ: {stats['fin_typ_updated']} updated from Gemini")
     print(f"BICS: {stats['bics_updated']} updated from Gemini")
     print(f"Industry: {stats['industry_updated']} updated from Gemini")
+    print(f"Yes/No fields: {stats['yesno_updated']} updated from Gemini")
+    print(f"Issuer Type: {stats['issuer_type_updated']} updated from Gemini")
+    print(f"ESG Project Categories: {stats['esg_cat_updated']} updated from Gemini")
+    print(f"Project Subcategory: {stats['subcat_updated']} updated from Gemini")
     print(f"\nSaved: {output_path}")
 
     # Verify issue date years
