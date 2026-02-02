@@ -1,0 +1,266 @@
+\documentclass[12pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{amsmath}
+\usepackage{hyperref}
+\usepackage{natbib}
+\usepackage{caption}
+\usepackage{enumitem}
+\usepackage{threeparttable}
+
+\title{Data Appendix: City-Level Infrastructure Investment Needs Panel}
+\date{}
+
+\begin{document}
+\maketitle
+
+\noindent This appendix documents the construction of the city-year panel dataset used in the analysis. The panel covers 575 large U.S.\ municipalities observed annually from 1992 to 2025 ($N = 17{,}657$ city-years). It integrates three federal data sources: the National Bridge Inventory (NBI), the Clean Watersheds Needs Survey (CWNS), and the Clean Water State Revolving Fund (CWSRF) agreement database. All dollar amounts are reported in both nominal terms and constant 2017 dollars using the Bureau of Economic Analysis (BEA) price index for state and local government gross investment in structures (FRED series Y650RG3A086NBEA).
+
+\tableofcontents
+
+%----------------------------------------------------------------------
+\section{City Sample and Geographic Boundaries}
+%----------------------------------------------------------------------
+
+The sample consists of 578 large U.S.\ incorporated places identified from the Census Bureau's 2023 TIGER/Line shapefiles. City boundaries are drawn from the Census Places geodatabase (\texttt{LargeCities\_places\_2023.gpkg}), using the NAD83 geographic coordinate reference system (EPSG:4269). A crosswalk file maps each city to its overlapping county or counties using Census FIPS codes; 571 cities fall within a single county, while 7 span multiple counties (e.g., New York City spans 5 counties, Houston spans 3). Three cities lack bridge records in the NBI and are excluded from the final panel, yielding 575 cities.
+
+%----------------------------------------------------------------------
+\section{Bridge Infrastructure (NBI)}
+%----------------------------------------------------------------------
+
+\subsection{Source}
+
+The National Bridge Inventory is maintained by the Federal Highway Administration (FHWA) and contains structural and condition data for all public road bridges and tunnels longer than 20 feet. We download the full NBI delimited files for each year from 1992 to 2025 from \url{https://www.fhwa.dot.gov/bridge/nbi}.
+
+\subsection{Spatial Assignment}
+
+Each bridge is assigned to a city using a point-in-polygon spatial join. Bridge coordinates are recorded in NBI fields \texttt{LAT\_016} and \texttt{LONG\_017} in degree-minute-second format (DDMMSSSS). We convert these to decimal degrees and create point geometries in EPSG:4269 (NAD83). Points falling within city polygon boundaries are assigned to that city. We perform the spatial join using the 2025 NBI snapshot to identify which bridges belong to which cities, then trace each bridge backward through all prior years using its unique identifier (\texttt{STATE\_CODE\_001} $\times$ \texttt{STRUCTURE\_NUMBER\_008}).
+
+\subsection{Variable Construction}
+
+For each city-year, we compute the variables described in Table~\ref{tab:bridge_vars} by aggregating across all bridges assigned to that city.
+
+\begin{table}[htbp]
+\centering
+\caption{Bridge Infrastructure Variables}
+\label{tab:bridge_vars}
+\begin{threeparttable}
+\begin{tabular}{@{}lp{10cm}@{}}
+\toprule
+Variable & Description \\
+\midrule
+\texttt{total\_bridges} & Count of bridges within city boundaries \\
+\texttt{deficient\_bridges} & Count with minimum condition rating $\leq 4$ or culvert condition $\leq 4$ \\
+\texttt{poor\_bridges} & Count with minimum condition rating $\leq 4$ \\
+\texttt{fair\_bridges} & Count with minimum condition rating $\in \{5, 6\}$ \\
+\texttt{good\_bridges} & Count with minimum condition rating $\geq 7$ \\
+\texttt{bridge\_imp\_cost\_k} & Sum of NBI field 94 (bridge improvement cost), in \$1,000s \\
+\texttt{roadway\_imp\_cost\_k} & Sum of NBI field 95 (roadway improvement cost), in \$1,000s \\
+\texttt{total\_imp\_cost\_k} & Sum of NBI field 96 (total improvement cost), in \$1,000s \\
+\texttt{imp\_cost\_per\_bridge\_k} & Total improvement cost divided by number of bridges, in \$1,000s \\
+\texttt{total\_deck\_area\_sqm} & Sum of deck area (m$^2$), computed as structure length $\times$ deck width when pre-computed field is unavailable \\
+\texttt{deficient\_deck\_area\_sqm} & Deck area of deficient bridges only (m$^2$) \\
+\texttt{total\_adt} & Sum of average daily traffic across all bridges \\
+\texttt{avg\_min\_condition} & Mean of $\min(\text{deck}, \text{superstructure}, \text{substructure})$ condition ratings \\
+\texttt{avg\_sufficiency} & Mean sufficiency rating (0--100 scale)\tnote{a} \\
+\texttt{avg\_bridge\_age} & Mean bridge age (current year $-$ year built) \\
+\texttt{scour\_critical\_count} & Count of bridges with scour critical rating $\leq 3$ \\
+\texttt{pct\_deficient} & Percentage of bridges classified as deficient \\
+\texttt{pct\_poor} & Percentage of bridges in poor condition \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}
+\small
+\item[a] The sufficiency rating was discontinued in the NBI after 2018. This variable is missing for years after the field was dropped.
+\end{tablenotes}
+\end{threeparttable}
+\end{table}
+
+\noindent The minimum condition rating for each bridge is defined as:
+\begin{equation}
+\texttt{min\_condition}_b = \min\bigl(\texttt{DECK\_COND\_058}_b,\ \texttt{SUPERSTRUCTURE\_COND\_059}_b,\ \texttt{SUBSTRUCTURE\_COND\_060}_b\bigr)
+\end{equation}
+where each component is rated on a 0--9 scale per FHWA coding guidelines.
+
+\subsection{Coverage}
+
+The bridge panel is complete for all 575 cities across all 34 years (1992--2025), yielding 17,657 city-year observations with non-missing bridge counts and condition ratings. Improvement cost fields are available for all years in nominal terms; deflated real costs are available from 2000 onward (when the BEA deflator series begins).
+
+%----------------------------------------------------------------------
+\section{Wastewater Infrastructure Needs (CWNS)}
+%----------------------------------------------------------------------
+
+\subsection{Source}
+
+The Clean Watersheds Needs Survey is conducted by the EPA approximately every four years. We use two survey rounds:
+
+\begin{itemize}[nosep]
+\item \textbf{2022 CWNS}: Downloaded from the EPA's public data portal at \url{https://sdwis.epa.gov/ords/sfdw_pub/r/sfdw/cwns_pub/data-download}. The download includes facility locations (\texttt{PHYSICAL\_LOCATION.csv}), facility metadata (\texttt{FACILITIES.csv}), cost estimates by category (\texttt{NEEDS\_COST\_BY\_CATEGORY.csv}), and design flow data (\texttt{FLOW.csv}).
+\item \textbf{2012 CWNS}: Extracted from the EPA's Access database (\texttt{HQ.mdb}) using facility-level records with documented needs.
+\end{itemize}
+
+\subsection{Spatial Assignment: Tiered Allocation}
+
+CWNS facilities vary in their geographic precision. Many wastewater treatment plants have precise point coordinates, but area-based programs (stormwater management, decentralized wastewater systems, nonpoint source control) often lack point locations. To achieve comprehensive city coverage, we employ a four-tier allocation strategy:
+
+\begin{description}[nosep,leftmargin=1.5cm,style=nextline]
+\item[Tier 0: Point spatial join.] Facilities with precise latitude/longitude coordinates are assigned to cities via point-in-polygon spatial join (predicate: \textit{within}), identical to the bridge methodology. This tier captures \$177.6B of 2022 needs across 450 cities and \$128.1B of 2012 needs.
+
+\item[Tier 1: City-centroid spatial join.] Facilities coded with ``City'' location type (i.e., assigned to a city centroid rather than a specific site) are joined using the centroid coordinates. This primarily captures stormwater and decentralized wastewater programs. This tier adds \$21.3B of 2022 needs across 234 cities.
+
+\item[Tier 2: County-level allocation.] Remaining unmatched facilities that report a county FIPS code are allocated to cities within that county, weighted by each city's share of total large-city land area in the county:
+\begin{equation}
+\texttt{allocation}_{c} = \texttt{needs}_{f} \times \frac{\texttt{ALAND}_{c}}{\sum_{j \in \mathcal{C}_k} \texttt{ALAND}_{j}}
+\end{equation}
+where $c$ indexes cities, $f$ indexes facilities, $k$ indexes counties, and $\mathcal{C}_k$ is the set of sample cities in county $k$. Land area (\texttt{ALAND}) is drawn from the Census TIGER/Line shapefiles. For cities spanning multiple counties, the city-county mapping from the crosswalk file is used. This tier adds \$50.5B of 2022 needs across 447 cities.
+
+\item[Tier 3: State-level allocation.] Facilities with only a state identifier are allocated to all sample cities in that state, again weighted by land area share:
+\begin{equation}
+\texttt{allocation}_{c} = \texttt{needs}_{f} \times \frac{\texttt{ALAND}_{c}}{\sum_{j \in \mathcal{S}_s} \texttt{ALAND}_{j}}
+\end{equation}
+where $\mathcal{S}_s$ is the set of sample cities in state $s$. This tier adds \$43.7B of 2022 needs and \$13.4B of 2012 needs.
+\end{description}
+
+\noindent This tiered approach yields coverage for all 578 cities in the 2022 survey (\$293.1B total) and 550 cities in the 2012 survey (\$141.6B total).
+
+\subsection{Deflation}
+
+CWNS cost estimates are reported in January dollars of the survey year. We deflate to constant 2017 dollars using the BEA price index for state and local government gross investment in structures:
+\begin{equation}
+\texttt{needs\_real}_{c,t} = \texttt{needs\_nominal}_{c,t} \times \frac{100}{\texttt{deflator}_t}
+\end{equation}
+where the deflator is normalized to 100 in 2017. The 2012 CWNS costs are deflated using the 2012 index value (93.381) and 2022 costs using the 2022 value (121.390).
+
+\subsection{Interpolation}
+
+We construct an annual panel for 2012--2025 by linear interpolation between the two survey rounds. For the 550 cities observed in both surveys:
+\begin{equation}
+\texttt{needs\_real}_{c,y} = n^{12}_{c} + \frac{y - 2012}{10} \times \bigl(n^{22}_{c} - n^{12}_{c}\bigr), \qquad y \in \{2012, \ldots, 2022\}
+\end{equation}
+where $n^{12}_{c}$ and $n^{22}_{c}$ are the deflated needs from the 2012 and 2022 surveys, respectively. For years after 2022, needs are held constant at the 2022 real value. For the 28 cities observed only in the 2022 survey, needs are held constant at the 2022 value for all years. Facility counts and design flow are interpolated analogously.
+
+\subsection{Variables}
+
+\begin{table}[htbp]
+\centering
+\caption{CWNS Variables}
+\label{tab:cwns_vars}
+\begin{tabular}{@{}lp{9cm}@{}}
+\toprule
+Variable & Description \\
+\midrule
+\texttt{cwns\_needs\_real} & Total wastewater infrastructure needs, constant 2017 dollars \\
+\texttt{cwns\_flow\_interp} & Aggregate design flow capacity (million gallons per day) \\
+\texttt{cwns\_facilities\_interp} & Count of CWNS facilities \\
+\texttt{cwns\_source} & Source indicator: ``2012,'' ``2022,'' or ``interpolated'' \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+%----------------------------------------------------------------------
+\section{Clean Water State Revolving Fund (CWSRF)}
+%----------------------------------------------------------------------
+
+\subsection{Source}
+
+CWSRF agreement data are drawn from the EPA's CWSRF Benefits Reporting database (\texttt{CWAgreementReport.csv}). The file contains 8,681 loan and grant agreements totaling \$58.9B across 51 states from 2001 to 2025. Key fields include borrower name, state, county, initial agreement amount, agreement date, and project needs categories.
+
+\subsection{Matching Methodology}
+
+We match SRF agreements to cities using a three-tier approach. Critically, each tier only considers agreements not already matched in a prior tier, preventing double-counting.
+
+\begin{description}[nosep,leftmargin=1.5cm,style=nextline]
+\item[Tier 1: Strict name match.] The borrower name is normalized by converting to lowercase, removing municipal suffixes (``city,'' ``town,'' ``village,'' ``borough,'' ``township''), removing ``of'' phrases, parenthetical text, and punctuation. The normalized borrower name is then matched exactly against normalized city names within the same state. This tier matches 684 agreements (\$9.6B) to 178 cities.
+
+\item[Tier 2: Filtered fuzzy match.] For remaining unmatched agreements, we check whether any city name (minimum 4 characters) appears as a complete word within the normalized borrower name, subject to the following exclusion rules:
+\begin{itemize}[nosep]
+\item Borrower names containing ``county'' (unless ``city and county'')
+\item Directional-prefix municipalities (e.g., ``East Cleveland'' $\neq$ Cleveland)
+\item Municipal suffix mismatches (e.g., ``Daytona Beach Shores'' $\neq$ Daytona Beach)
+\item Parish entities (Louisiana county equivalents)
+\item Regional, conservation, irrigation, and port authorities
+\item State-level agencies (e.g., ``New Jersey Water Supply Authority'' $\neq$ Jersey City)
+\item Multi-jurisdiction entities (``Greater'' prefix)
+\item Township entities
+\item Specific known false positives (e.g., Sioux Center $\neq$ Sioux City; Dell Rapids $\neq$ Rapid City)
+\end{itemize}
+When one agreement matches multiple cities, we assign it to the city with the longest name (most specific match). This tier matches 212 additional agreements (\$3.8B) to 40 cities.
+
+\item[Tier 3: County allocation.] Remaining unmatched agreements with a county identifier are allocated to sample cities in that county using the same land-area weighting as in the CWNS Tier 2 allocation (Equation~2). This tier allocates 79 agreements (\$0.8B) to 27 cities.
+\end{description}
+
+\subsection{Variables}
+
+We report two sets of SRF variables to reflect different matching confidence levels:
+
+\begin{table}[htbp]
+\centering
+\caption{CWSRF Variables}
+\label{tab:srf_vars}
+\begin{tabular}{@{}lp{8.5cm}@{}}
+\toprule
+Variable & Description \\
+\midrule
+\texttt{srf\_strict\_count} & Number of SRF agreements matched via Tier 1 (strict name match only) \\
+\texttt{srf\_strict\_amount} & Total initial agreement amount, nominal dollars (Tier 1) \\
+\texttt{srf\_strict\_amount\_real} & Total initial agreement amount, constant 2017 dollars (Tier 1) \\
+\texttt{srf\_incl\_count} & Number of SRF agreements matched via Tiers 1--3 \\
+\texttt{srf\_incl\_amount} & Total initial agreement amount, nominal dollars (Tiers 1--3) \\
+\texttt{srf\_incl\_amount\_real} & Total initial agreement amount, constant 2017 dollars (Tiers 1--3) \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\noindent SRF data are sparse by construction: most CWSRF lending targets smaller communities, so only 178 cities (31\% of the sample) have any strict-match SRF activity, and the matched share of total national CWSRF dollars is 24.2\%. SRF variables are missing (not zero) for city-years with no matched agreements.
+
+%----------------------------------------------------------------------
+\section{Price Deflator}
+%----------------------------------------------------------------------
+
+All nominal dollar amounts are deflated to constant 2017 dollars using the BEA implicit price deflator for state and local government gross investment in structures (NIPA Table 3.9.4, FRED series \texttt{Y650RG3A086NBEA}). This deflator is specific to public infrastructure investment and accounts for construction cost inflation, which has diverged substantially from general CPI inflation. The deflator is normalized to 100 in the base year 2017. Values for 2024--2025 are extrapolated from the 2023 value using the 2022--2023 growth rate. Deflated real-dollar variables are available for years 2000--2025; earlier years (1992--1999) lack deflator coverage and real-dollar fields are coded as missing.
+
+The deflation formula applied uniformly to all nominal cost variables is:
+\begin{equation}
+\texttt{real}_{c,t} = \texttt{nominal}_{c,t} \times \frac{100}{\texttt{deflator}_t}
+\end{equation}
+
+%----------------------------------------------------------------------
+\section{Panel Summary}
+%----------------------------------------------------------------------
+
+\begin{table}[htbp]
+\centering
+\caption{Panel Coverage Summary}
+\label{tab:panel_summary}
+\begin{tabular}{@{}lcccl@{}}
+\toprule
+Component & Cities & Years & City-Years & Dollar Basis \\
+\midrule
+Bridge conditions \& costs (NBI) & 575 & 1992--2025 & 17,657 & Nominal + 2017\$ \\
+Wastewater needs (CWNS) & 575 & 2012--2025 & 7,967 & 2017\$ \\
+CWSRF strict (name match) & 178 & 2009--2025 & 406 & Nominal + 2017\$ \\
+CWSRF inclusive (all tiers) & 227 & 2004--2025 & 621 & Nominal + 2017\$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\noindent The final panel file (\texttt{city\_year\_investment\_needs\_v3.csv}) contains 17,657 rows and 37 columns. The unit of observation is a city-year. Bridge variables are available for all city-years. CWNS variables are available for 2012--2025 only (interpolated between the 2012 and 2022 survey rounds). CWSRF variables are populated only for city-years in which at least one matched agreement exists.
+
+%----------------------------------------------------------------------
+\section{Replication}
+%----------------------------------------------------------------------
+
+The panel is constructed using the following pipeline:
+
+\begin{enumerate}[nosep]
+\item \texttt{download\_nbi.py} --- Downloads NBI delimited files (1992--2025) and combines into a single Parquet file.
+\item \texttt{download\_cwns.py} --- Downloads 2022 CWNS facility data from the EPA.
+\item \texttt{extract\_cwns\_2012.py} --- Documents extraction of 2012 CWNS facility data from the EPA Access database (\texttt{HQ.mdb}).
+\item \texttt{spatial\_join\_cities.py} --- Performs point-in-polygon spatial joins for NBI bridges and CWNS facilities against city boundaries.
+\item \texttt{build\_investment\_panel.py} --- Aggregates bridge-level NBI data to the city-year level and constructs bridge condition and cost variables.
+\item \texttt{build\_cwns\_interpolation.py} --- Implements the four-tier CWNS allocation, deflates to 2017 dollars, and interpolates between survey rounds.
+\item \texttt{build\_srf\_panel.py} --- Matches CWSRF agreements to cities using the three-tier methodology described in Section~4 and produces strict and inclusive SRF columns.
+\end{enumerate}
+
+\end{document}
